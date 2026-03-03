@@ -2,7 +2,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"; 
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-const firebaseConfig = { apiKey: "AIzaSyC1Td2zrBIRb5JvdaNKwoK_6aTHVUqP2rA", authDomain: "msample2026-db0f9.firebaseapp.com", databaseURL: "https://msample2026-db0f9-default-rtdb.firebaseio.com", projectId: "msample2026-db0f9", storageBucket: "msample2026-db0f9.appspot.com", messagingSenderId: "591014040082", appId: "1:591014040082:web:00baaac378af50bb4e7ecb" };
+const firebaseConfig = { apiKey: "AIzaSyC1Td2zrBIRb5JvdaNKwoK_6aTHVUqP2rA", 
+authDomain: "sample2026-db0f9.firebaseapp.com", 
+databaseURL: "https://sample2026-db0f9-default-rtdb.firebaseio.com", 
+projectId: "sample2026-db0f9", 
+storageBucket: "sample2026-db0f9.firebasestorage.app", 
+messagingSenderId: "591014040082", 
+appId: "1:591014040082:web:00baaac378af50bb4e7ecb" };
 const app = initializeApp(firebaseConfig); 
 const db = getDatabase(app);
 
