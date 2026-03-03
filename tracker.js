@@ -1,24 +1,30 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-const firebaseConfig = { apiKey: "AIzaSyC1Td2zrBIRb5JvdaNKwoK_6aTHVUqP2rA", 
+const firebaseConfig = {
+  apiKey: "AIzaSyC1Td2zrBIRb5JvdaNKwoK_6aTHVUqP2rA", 
 authDomain: "sample2026-db0f9.firebaseapp.com", 
 databaseURL: "https://sample2026-db0f9-default-rtdb.firebaseio.com", 
 projectId: "sample2026-db0f9", 
 storageBucket: "sample2026-db0f9.firebasestorage.app", 
 messagingSenderId: "591014040082", 
-appId: "1:591014040082:web:00baaac378af50bb4e7ecb" };
+appId: "1:591014040082:web:00baaac378af50bb4e7ecb"
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 function loadProgress() {
   const plansRef = ref(db, "plans");
+
   onValue(plansRef, (snapshot) => {
     let completed = 0, total = 0;
-    snapshot.forEach((child) => {
+
+    snapshot.forEach((childSnapshot) => {
       total++;
-      if (child.val().completed) completed++;
+      if (childSnapshot.val().completed) {
+        completed++;
+      }
     });
 
     // Update text
@@ -26,9 +32,12 @@ function loadProgress() {
 
     // Update chart
     const ctx = document.getElementById("progressChart").getContext("2d");
+
+    // Destroy old chart if exists
     if (window.progressChart) {
-      window.progressChart.destroy(); // clear old chart
+      window.progressChart.destroy();
     }
+
     window.progressChart = new Chart(ctx, {
       type: "pie",
       data: {
