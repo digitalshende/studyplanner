@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Study Plan</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h2 { color: #333; margin-bottom: 1.5rem; text-align: center; }
+        label { font-weight: 500; color: #4a5568; display: block; margin: 10px 0 5px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover { background: #38a169; }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .error { color: red; text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>➕ Add New Study Plan</h2>
+        <form id="plan-form">
+            <label for="subject">Subject</label>
+            <select id="subject" required>
+                <option value="">--Select Subject--</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Science">Science</option>
+                <option value="English">English</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Marathi">Marathi</option>
+            </select>
+
+            <label for="topic">Topic/Chapter</label>
+            <input type="text" id="topic" placeholder="e.g., Quadratic Equations" required>
+
+            <label for="targetDate">Target Date</label>
+            <input type="date" id="targetDate" required>
+
+            <button type="submit">Save Plan</button>
+        </form>
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <div id="message" class="error"></div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Redirect if not logged in
+        auth.onAuthStateChanged(user => {
+            if (!user) window.location.href = 'index.html';
+        });
+
+        document.getElementById('plan-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const subject = document.getElementById('subject').value;
+            const topic = document.getElementById('topic').value.trim();
+            const targetDate = document.getElementById('targetDate').value;
+            const user = auth.currentUser;
+
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, 'plans'), {
+                    subject,
+                    topic,
+                    targetDate: new Date(targetDate),
+                    completed: false,
+                    userId: user.uid
+                });
+                // Redirect to dashboard on success
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                document.getElementById('message').textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
